@@ -66,10 +66,12 @@ class HashMap:
         for _ in range(self.capacity):
             self.buckets.append(LinkedList())
 
-
     def get(self, key: str) -> object:
         """
         Returns the value associated with the given key. If the key is not in the hash map, the method returns None.
+            :param str key: value to look for in hash map.
+            :return: value associated with the given key.
+            :rtype: object.
         """
         # get bucket where given key may be found
         bucket = self.get_bucket(key)
@@ -152,9 +154,12 @@ class HashMap:
         """
         empty_bucket_count = 0
 
+        # iterate through buckets
         for i in range(self.buckets.length()):
+            # check if bucket is empty
             if self.buckets[i].length() == 0:
                 empty_bucket_count += 1
+
         return empty_bucket_count
 
     def table_load(self) -> float:
@@ -165,26 +170,65 @@ class HashMap:
         """
         # load factor = total number of elements stored in the table / number of buckets
         load_factor = self.size / self.capacity
+
         return load_factor
 
     def resize_table(self, new_capacity: int) -> None:
         """
-        TODO: Write this implementation
+        Changes the capacity of the internal hash table. All existing key / value pairs must remain in the new hash
+        map and all hash table links must be rehashed. If new_capacity is less than 1, this method should do nothing.
+            :param int new_capacity: new capacity of hash table.
         """
-        pass
+        if new_capacity >= 1:
+            # store existing key / value pairs
+            old_table = self.buckets
+
+            # resize table with new capacity
+            self.buckets = DynamicArray()
+            for _ in range(new_capacity):
+                self.buckets.append(LinkedList())
+
+            # rehash table links with new capacity
+
+            # update capacity
+            self.capacity = new_capacity
+
 
     def get_keys(self) -> DynamicArray:
         """
-        TODO: Write this implementation
+        Returns a DynamicArray that contains all keys stored in your hash map. The order of the keys in the DA does not
+        matter.
+            :return: all the keys in the hash map.
+            :rtype: DynamicArray.
+        TODO: retest after resize_table() implemented.
         """
-        return DynamicArray()
+        # storage for keys
+        keys = DynamicArray()
+
+        # iterate through the buckets
+        for bucket in self.buckets:
+            # check if there are keys in that bucket
+            if bucket.length() != 0:
+                # add each key in that bucket
+                for node in bucket:
+                    keys.append(node.key)
+
+        return keys
 
     def get_bucket(self, key: str) -> LinkedList:
+        """
+        Returns a bucket where the given key should be placed based on the results of the hash function.
+            :param str key: value passed to hash function for placement into hash table.
+            :return: bucket for given key.
+            :rtype: LinkedList.
+        """
+        # get hash
         hash = self.hash_function(key)
+        # compute index for hash table
         index = hash % self.capacity
-        bucket = self.buckets[index]
 
-        return bucket
+        # return bucket
+        return self.buckets[index]
 
 
 # BASIC TESTING
