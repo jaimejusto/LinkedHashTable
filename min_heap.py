@@ -46,9 +46,13 @@ class MinHeap:
 
     def add(self, node: object) -> None:
         """
-        TODO: Write this implementation
+        Adds a new object to the MinHeap maintaining heap property.
         """
-        pass
+        # add element at the end of the array
+        self.heap.append(node)
+
+        # check if we maintained the heap property
+        self.bubble_up(self.heap.length() - 1)
 
     def get_min(self) -> object:
         """
@@ -67,6 +71,16 @@ class MinHeap:
         TODO: Write this implementation
         """
         pass
+
+    def bubble_up(self, new_element_index):
+        parent_index = ((new_element_index - 1) // 2)
+        # swap new element with its parent until it is no longer smaller than its parent
+        while new_element_index > 0 and self.heap[new_element_index] < self.heap[parent_index]:
+            temp = self.heap[parent_index]
+            self.heap[parent_index] = self.heap[new_element_index]
+            self.heap[new_element_index] = temp
+            new_element_index = parent_index
+            parent_index = ((new_element_index - 1) // 2)
 
 
 # BASIC TESTING
