@@ -58,9 +58,13 @@ class HashMap:
 
     def clear(self) -> None:
         """
-        TODO: Write this implementation
+        Clears the content of the hash map. It does not change underlying hash table capacity.
         """
-        pass
+        self.buckets = DynamicArray()
+        self.size = 0
+        for _ in range(self.capacity):
+            self.buckets.append(LinkedList())
+
 
     def get(self, key: str) -> object:
         """
@@ -95,16 +99,32 @@ class HashMap:
         """
         Removes the given key and its associated value from the hash map. If a given key is not in the hash map, the
         method does nothing.
-            :param str key: value to look for in hash map
+            :param str key: value to look for in hash map.
         """
         pass
 
 
     def contains_key(self, key: str) -> bool:
         """
-        TODO: Write this implementation
-
+        Returns True if the given key is in the hash map, otherwise it returns False. An empty hash map does not contain
+         any keys.
+            :param str key: value to look for in hash map.
+            :return: True if given key is in the hash map, otherwise False.
+            :rtype: bool.
         """
+        # hash map is empty, therefore it doesn't contain any keys
+        if self.size == 0:
+            return False
+
+        # hash map isn't empty, get the bucket where the key may be found
+        bucket = self.get_bucket(key)
+
+        # search the bucket for the given key
+        if bucket.contains(key):
+            # key was found
+            return True
+
+        # key was not found
         return False
 
     def empty_buckets(self) -> int:
