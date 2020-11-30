@@ -56,15 +56,38 @@ class MinHeap:
 
     def get_min(self) -> object:
         """
-        TODO: Write this implementation
+        Returns an object with a minimum key without removing it from the heap. If the heap is empty, the method raises
+        a MinHeapException.
+            :return: minimum key from the heap.
+            :rtype: object.
         """
-        return None
+        # check if heap is empty
+        if self.is_empty():
+            raise MinHeapException
+
+        return self.heap[0]
 
     def remove_min(self) -> object:
         """
-        TODO: Write this implementation
+        Returns an object with a minimum key and removes it from the heap. If the heap is empty, the method raises a
+        MinHeapException.
+            :return: minimum key from the heap.
+            :rtype: object.
         """
-        return None
+        if self.is_empty():
+            raise MinHeapException
+
+        # replace root with last element
+        last_element_index = self.heap.length() - 1
+        self.heap.swap(0, last_element_index)
+
+        # store and remove minimum key
+        min_key = self.heap.pop()
+
+        # swap the last element with its child until reaching the correct spot
+        self.trickle_down(0)
+
+        return min_key
 
     def build_heap(self, da: DynamicArray) -> None:
         """
@@ -76,11 +99,30 @@ class MinHeap:
         parent_index = ((new_element_index - 1) // 2)
         # swap new element with its parent until it is no longer smaller than its parent
         while new_element_index > 0 and self.heap[new_element_index] < self.heap[parent_index]:
-            temp = self.heap[parent_index]
-            self.heap[parent_index] = self.heap[new_element_index]
-            self.heap[new_element_index] = temp
+            self.heap.swap(parent_index, new_element_index)
             new_element_index = parent_index
             parent_index = ((new_element_index - 1) // 2)
+
+    def trickle_down(self, replacement_element_index):
+        size = self.heap.length() - 1
+
+        # swap the replacement element with its minimum child
+        while replacement_element_index >= 0:
+            j = -1
+            right_index = 2 * replacement_element_index + 2
+            if right_index < size and self.heap[right_index] < self.heap[replacement_element_index]:
+                left_index = 2 * replacement_element_index + 1
+                if self.heap[left_index] < self.heap[right_index]:
+                    j = left_index
+                else:
+                    j = right_index
+            else:
+                left_index = 2 * replacement_element_index + 1
+                if left_index < size and self.heap[left_index] < self.heap[replacement_element_index]:
+                    j = left_index
+            if j >= 0:
+                self.heap.swap(j, replacement_element_index)
+            replacement_element_index = j
 
 
 # BASIC TESTING
