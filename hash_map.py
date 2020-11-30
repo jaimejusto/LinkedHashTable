@@ -1,7 +1,8 @@
 # Course: CS261 - Data Structures
 # Assignment: 5
 # Student: Jaime Justo
-# Description:
+# Description: Hash map implementation using a dynamic array to store the hash table. Chaining implemented using a
+#               singly linked list for collision resolution.
 
 
 # Import pre-written DynamicArray and LinkedList classes
@@ -122,6 +123,7 @@ class HashMap:
         if bucket.contains(key):
             # key was found, remove the key/value pair
             bucket.remove(key)
+            self.size -= 1
 
     def contains_key(self, key: str) -> bool:
         """
@@ -180,7 +182,7 @@ class HashMap:
             :param int new_capacity: new capacity of hash table.
         """
         if new_capacity >= 1:
-            # store existing key / value pairs
+            # store old table
             old_table = self.buckets
 
             # resize table with new capacity
@@ -188,11 +190,18 @@ class HashMap:
             for _ in range(new_capacity):
                 self.buckets.append(LinkedList())
 
-            # rehash table links with new capacity
-
             # update capacity
             self.capacity = new_capacity
 
+            # rehash table links with new capacity
+            # iterate through old buckets
+            for bucket in old_table:
+                # check for keys in current bucket
+                if bucket.length() != 0:
+                    # get key / value pairs in non-empty bucket
+                    for node in bucket:
+                        new_bucket = self.get_bucket(node.key)          # new bucket to place key / value pair
+                        new_bucket.insert(node.key, node.value)         # insert key / value pair
 
     def get_keys(self) -> DynamicArray:
         """
@@ -200,16 +209,15 @@ class HashMap:
         matter.
             :return: all the keys in the hash map.
             :rtype: DynamicArray.
-        TODO: retest after resize_table() implemented.
         """
         # storage for keys
         keys = DynamicArray()
 
         # iterate through the buckets
         for bucket in self.buckets:
-            # check if there are keys in that bucket
+            # check for keys in current bucket
             if bucket.length() != 0:
-                # add each key in that bucket
+                # get each key in non-empty bucket and add it to list
                 for node in bucket:
                     keys.append(node.key)
 
