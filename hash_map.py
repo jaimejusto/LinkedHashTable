@@ -70,12 +70,14 @@ class HashMap:
 
     def put(self, key: str, value: object) -> None:
         """
-        TODO: Write this implementation
+        Updates the key / value pair in the hash map. If a given key already exists in the hash map, its associated
+        value is replaced with the new value. If a given key is not in the hash map, a key / value pair is then added.
+            :param str key: value to look for in hash map.
+            :param object value: replaces old value if given key already exists, otherwise gets added with the given key
+                to the hash map.
         """
         # get the bucket to place key in
-        hash = self.hash_function(key)
-        index = hash % self.capacity
-        bucket = self.buckets[index]
+        bucket = self.get_bucket(key)
 
         # check if bucket already contains the given key
         key_in_bucket = bucket.contains(key)
@@ -85,15 +87,18 @@ class HashMap:
             key_in_bucket.value = value
 
         # if given key not in hash map, add it
-        if key_in_bucket is None:
+        elif key_in_bucket is None:
             bucket.insert(key, value)
             self.size += 1
 
     def remove(self, key: str) -> None:
         """
-        TODO: Write this implementation
+        Removes the given key and its associated value from the hash map. If a given key is not in the hash map, the
+        method does nothing.
+            :param str key: value to look for in hash map
         """
         pass
+
 
     def contains_key(self, key: str) -> bool:
         """
@@ -104,7 +109,9 @@ class HashMap:
 
     def empty_buckets(self) -> int:
         """
-        TODO: Write this implementation
+        Returns a number of empty buckets in the hash table.
+            :return: number of empty buckets in the hash table
+            :rtype: int
         """
         empty_bucket_count = 0
 
@@ -115,9 +122,13 @@ class HashMap:
 
     def table_load(self) -> float:
         """
-        TODO: Write this implementation
+        Returns the current hash table load factor.
+            :return: average number of elements in each bucket (load factor).
+            :rtype: float.
         """
-        return 0.0
+        # load factor = total number of elements stored in the table / number of buckets
+        load_factor = self.size / self.capacity
+        return load_factor
 
     def resize_table(self, new_capacity: int) -> None:
         """
@@ -130,6 +141,13 @@ class HashMap:
         TODO: Write this implementation
         """
         return DynamicArray()
+
+    def get_bucket(self, key: str) -> LinkedList:
+        hash = self.hash_function(key)
+        index = hash % self.capacity
+        bucket = self.buckets[index]
+
+        return bucket
 
 
 # BASIC TESTING
