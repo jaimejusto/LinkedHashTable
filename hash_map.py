@@ -59,6 +59,7 @@ class HashMap:
     def clear(self) -> None:
         """
         Clears the content of the hash map. It does not change underlying hash table capacity.
+        TODO: retest after resize() implemented.
         """
         self.buckets = DynamicArray()
         self.size = 0
@@ -68,8 +69,19 @@ class HashMap:
 
     def get(self, key: str) -> object:
         """
-        TODO: Write this implementation
+        Returns the value associated with the given key. If the key is not in the hash map, the method returns None.
         """
+        # get bucket where given key may be found
+        bucket = self.get_bucket(key)
+
+        # search the bucket for the given key
+        key_in_bucket = bucket.contains(key)
+
+        # if the given key is in the bucket, return its value
+        if key_in_bucket:
+            return key_in_bucket.value
+
+        # given key was not in the bucket
         return None
 
     def put(self, key: str, value: object) -> None:
@@ -101,8 +113,13 @@ class HashMap:
         method does nothing.
             :param str key: value to look for in hash map.
         """
-        pass
+        # get the bucket where the given key may be found
+        bucket = self.get_bucket(key)
 
+        # search the bucket for the given key
+        if bucket.contains(key):
+            # key was found, remove the key/value pair
+            bucket.remove(key)
 
     def contains_key(self, key: str) -> bool:
         """
