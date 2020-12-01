@@ -60,7 +60,6 @@ class HashMap:
     def clear(self) -> None:
         """
         Clears the content of the hash map. It does not change underlying hash table capacity.
-        TODO: retest after resize() implemented.
         """
         self.buckets = DynamicArray()
         self.size = 0
@@ -157,9 +156,9 @@ class HashMap:
         empty_bucket_count = 0
 
         # iterate through buckets
-        for i in range(self.buckets.length()):
+        for bucket in self.buckets:
             # check if bucket is empty
-            if self.buckets[i].length() == 0:
+            if bucket.length() == 0:
                 empty_bucket_count += 1
 
         return empty_bucket_count
